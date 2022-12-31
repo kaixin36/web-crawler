@@ -1,7 +1,8 @@
 import requests
 
 if __name__ == '__main__':
-    url = "https://www.baidu.com"
-    x = requests.get(url)
+    url = "https://fanyi.baidu.com/langdetect"
+    param = {"query": "dog"}
+    x = requests.post(url, param)
     x.encoding = "utf-8"
     print(x.text)
