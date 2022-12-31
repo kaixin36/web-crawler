@@ -3,20 +3,27 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
+# Chrome浏览器打开百度首页
 class BaiduOperate:
-    # Chrome浏览器打开百度首页
-    driver = webdriver.Chrome()
-    driver.get("https://www.baidu.com")
+    url = ""
 
-    # 搜索框
-    searchInput = driver.find_element(By.ID, "kw")
-    searchInput.send_keys("刘凡")
+    def __init__(self):
+        self.url = "https://www.baidu.com"
 
-    # 搜索内容
-    searchButton = driver.find_element(By.ID, "su")
-    searchButton.click()
-    while True:
-        b = 1
+    def openBaidu(self):
+        driver = webdriver.Chrome()
+        driver.get(self.url)
+
+        # 搜索框
+        search_input = driver.find_element(By.ID, "kw")
+        search_input.send_keys("宫崎骏")
+
+        # 搜索内容
+        search_button = driver.find_element(By.ID, "su")
+        search_button.click()
+        while True:
+            b = 1
 
 
-BaiduOperate.openBadu()
+y = BaiduOperate()
+y.openBaidu()
