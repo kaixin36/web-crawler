@@ -77,7 +77,6 @@ class BaiduOperate:
         userNo = self.driver.find_element(By.ID, "userName")
         userNo.send_keys("Z1211")
 
-
         password = self.driver.find_element(By.ID, "password")
         password.send_keys("zemic")
         sleep(2)
