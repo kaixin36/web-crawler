@@ -4,12 +4,15 @@ import pickle
 from selenium import webdriver
 from time import sleep
 
+from selenium.webdriver.common.by import By
+
 # 大麦网主页
 damai_url = "https://www.damai.cn/"
 # 登录页
 login_url = "https://passport.damai.cn/login?ru=https%3A%2F%2Fwww.damai.cn%2F"
 # 抢票目标页
-target_url = "https://detail.damai.cn/item.htm?spm=a2oeg.search_category.0.0.509c6baceRSBvy&id=735569639024&clicktitle=%E4%BA%94%E6%9C%88%E5%A4%A92023%E3%80%8C%E5%A5%BD%E5%A5%BD%E5%A5%BD%E6%83%B3%E8%A7%81%E5%88%B0%E4%BD%A0%E3%80%8D%E9%87%8D%E5%BA%86%E6%BC%94%E5%94%B1%E4%BC%9A"
+# target_url = "https://detail.damai.cn/item.htm?spm=a2oeg.search_category.0.0.509c6baceRSBvy&id=735569639024&clicktitle=%E4%BA%94%E6%9C%88%E5%A4%A92023%E3%80%8C%E5%A5%BD%E5%A5%BD%E5%A5%BD%E6%83%B3%E8%A7%81%E5%88%B0%E4%BD%A0%E3%80%8D%E9%87%8D%E5%BA%86%E6%BC%94%E5%94%B1%E4%BC%9A"
+target_url = "https://detail.damai.cn/item.htm?spm=a2oeg.home.card_0.ditem_1.7fa123e1XZPBvI&id=734752425028"
 
 
 # 初始化加载
@@ -20,6 +23,17 @@ class Concert:
         try:
             # self.driver = webdriver.Chrome(executable_path='C:/Users/kaixin/Downloads/chromedriver - win32/chromedriver.exe')  # 默认Chrome浏览器
             self.driver = webdriver.Chrome()
+            self.driver.get(login_url)
+            self.driver.maximize_window()  # 最大化窗口
+            isDirectLogin = True
+            while isDirectLogin:
+                # sleep(60)
+                self.driver.get(target_url)
+                if self.isElementExist("不，立即预订"):
+                    self.driver.find_element(By.XPATH, "//div[text()='不，立即预订']").click()
+                    if self.isElementExist("提交订单"):
+                        isDirectLogin = False
+
         except Exception as error:
             print(error)
 
@@ -88,9 +102,12 @@ class Concert:
         flag = True
         browser = self.driver
         try:
-            browser.find_element_by_xpath(element)
+            # browser.find_element_by_xpath(element)
+            # self.driver.find_element(By.XPATH, element)
+            # self.driver.find_element(By.XPATH, "//div[text()='不，立即预订']")
+            self.driver.find_element(By.XPATH, "//div[text()='%s']" % element)
             return flag
-        except :
+        except:
             flag = False
             return flag
 
@@ -102,7 +119,8 @@ class Concert:
             while self.driver.title.find('确认订单') == -1:  # 如果跳转到了订单结算界面就算这步成功了，否则继续执行此步
                 self.driver.get(target_url)
                 try:
-                    buybutton = self.driver.find_element_by_class_name('buybtn').text
+                    # buybutton = self.driver.find_element_by_class_name('buybtn').text
+                    buybutton = self.driver.find_element(By.LINK_TEXT, "buy-link")
                     if buybutton == "提交缺货登记":
                         # 改变现有状态
                         self.status = 2
@@ -169,8 +187,8 @@ class Concert:
 if __name__ == '__main__':
     try:
         con = Concert()  # 初始化
-        con.enter_concert()  # 打开浏览器
-        con.choose_ticket()  # 开始抢票
+        # con.enter_concert()  # 打开浏览器
+        # con.choose_ticket()  # 开始抢票
 
     except Exception as e:
         print(e)
